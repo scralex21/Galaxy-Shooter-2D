@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {   
-    public float speed = 3.5f;
+    [SerializeField]
+    private float speed = 3.5f;
+    [SerializeField]
+    private GameObject _laserPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +20,17 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+
+        // if i hit the space key
+        // spawn gameobject
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+        }
+      
     }
+    
 
     void CalculateMovement()
     {
