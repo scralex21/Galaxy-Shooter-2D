@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 4
+  _enemylaserPrefab: {fileID: 7571497910952363671, guid: 054eb264e50388d43bf48be5336ec9b3, type: 3}
 --- !u!212 &6709948359511205421
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -132,7 +133,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.012234211, y: 0.033813953}
+  m_Offset: {x: 0.016802073, y: 0.004777491}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -143,5 +144,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.2049417, y: 2.6897192}
+  m_Size: {x: 2.2630143, y: 2.7477922}
   m_EdgeRadius: 0
