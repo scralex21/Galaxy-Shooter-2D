@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _speed = 4f;
     [SerializeField]
-    private GameObject _enemylaserPrefab;
+    private GameObject _enemyLaserPrefab;
 
 
     // Start is called before the first frame update
@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
     IEnumerator EnemyFireLaser()
     {
         var _randomFire = Random.Range(5f, 7f);
-        Instantiate(_enemylaserPrefab, transform.position, Quaternion.identity);
+        Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(_randomFire);
     }
 }
