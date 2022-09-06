@@ -9,7 +9,6 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject _enemyLaserPrefab;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +33,6 @@ public class Enemy : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         if (other.tag == "Player")
         {
             Player player = other.transform.GetComponent<Player>();
@@ -45,7 +43,6 @@ public class Enemy : MonoBehaviour
 
             Destroy(this.gameObject);
         }
-
 
         if (other.tag == "Laser")
         {

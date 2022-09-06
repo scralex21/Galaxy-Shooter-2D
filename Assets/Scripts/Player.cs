@@ -16,8 +16,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _health = 3;
     private SpawnManager _spawnManager;
-
-    //variable  for is TripleShotActive
     [SerializeField]
     private bool _isTripleShotActive = false;
     
@@ -31,7 +29,6 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Spawn Manager is NULL");
         }
-
     }
 
     // Update is called once per frame
@@ -43,9 +40,7 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
-      
     }
-    
 
     void CalculateMovement()
     {
@@ -73,6 +68,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.0f, transform.position.y, 0);
         }
     }
+
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
@@ -86,15 +82,6 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
-
-        //if space key press,
-        //if tripleshotActive is true
-            //fire 3 lasers (triple shot prefab)
-
-
-        //else fire 1 laser
-        
-        //instantiate 3 lasers (triple shot prefab)
     }
 
     public void Damage()
@@ -110,11 +97,13 @@ public class Player : MonoBehaviour
 
     public void TripleShotActive()
     {
-        //tripleShotActive becomes true
-        //start the power down coroutine for triple shot
+        _isTripleShotActive = true;
+        StartCoroutine(TripleShotPowerDown());
     }
 
-    //IEnumerator TripleShotPowerDownRoutine
-    //wait 5 seconds
-    //set the triple shot to false
+    IEnumerator TripleShotPowerDown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isTripleShotActive = false;
+    }
 }
