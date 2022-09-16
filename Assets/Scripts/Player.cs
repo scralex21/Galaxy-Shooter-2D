@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     private int _score;
     private UIManager _uiManaager;
 
+
     //variable reference to the shield visualizer
 
     // Start is called before the first frame update
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+
     }
 
     void CalculateMovement()
