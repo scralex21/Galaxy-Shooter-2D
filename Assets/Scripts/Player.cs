@@ -26,17 +26,26 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score;
     private UIManager _uiManaager;
+    
+    [SerializeField]
+    private GameObject _rightEngineDamage;
+    [SerializeField]
+    private GameObject _leftEngineDamage;
 
 
-    //variable reference to the shield visualizer
+    // variable to store the audio clip
+    [SerializeField]
+    private AudioClip _laserAudio;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
-        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
 
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManaager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _audioSource = GetComponent<AudioSource>();
 
         if (_spawnManager == null)
         {
@@ -46,6 +55,15 @@ public class Player : MonoBehaviour
         if (_uiManaager == null)
         {
             Debug.LogError("The UI Manager is NULL");
+        }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("The Audio Source is NULL");
+        }
+        else
+        {
+            _audioSource.clip = _laserAudio;
         }
     }
 
@@ -110,23 +128,38 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
+
+        //play the laser audio clip
+        _audioSource.Play();
     }
 
     public void Damage()
     {
-        //if shields is active
-        //do nothing...
-        //deactivate shields
-        //return;
+        
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
-            //disable the visualizer
             _shieldVisual.SetActive(false);
             return;
         }
 
         _lives = _lives - 1;
+
+        // if lives is 2
+        // Enable right engine
+        // else if lives is 1
+        // enable left engine
+
+        if (_lives == 2)
+        {
+            _rightEngineDamage.SetActive(true);
+        }
+        else if (_lives == 1)
+        {
+            _leftEngineDamage.SetActive(true);
+        }
+
+
 
         _uiManaager.UpdateLives(_lives);
 
@@ -140,7 +173,6 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldActive = true;
-        //enable the visualizer
         _shieldVisual.SetActive(true);
     }
 
