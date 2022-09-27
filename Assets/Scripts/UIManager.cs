@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    // handle to text
     [SerializeField]
     private Text _scoreText;
     [SerializeField]
@@ -22,16 +21,11 @@ public class UIManager : MonoBehaviour
     private Image _LivesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
-    
     private GameManager _gameManager;
     private bool _isAsteroidDestroyed;
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        //assign text component to the handle
         _scoreText.text = "Score: " + 0;
         _destroyAsteroidText.gameObject.SetActive(true);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();

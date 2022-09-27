@@ -6,22 +6,50 @@ public class Laser : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 8f;
+    private bool _isEnemyLaser;
 
-    // Update is called once per frame
     void Update()
+    {
+        if (_isEnemyLaser == false)
+        {
+            PlayerLaser();
+        }
+        else
+        {
+            EnemyLaser();
+        }
+    }
+
+    void PlayerLaser()
     {
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
 
         if (transform.position.y > 8f)
         {
-            //check if the object has a parent
-            //destroy the parent too!
             if (transform.parent != null)
             {
                 Destroy(transform.parent.gameObject);
             }
             Destroy(gameObject);
         }
+    }
 
+    void EnemyLaser()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+
+        if (transform.position.y < -8f)
+        {
+            if (transform.parent != null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
+            Destroy(gameObject);
+        }
+    }
+
+    public void AssignEnemyLaser()
+    {
+        _isEnemyLaser = true;
     }
 }

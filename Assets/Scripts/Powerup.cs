@@ -6,13 +6,11 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3f;
-
-    [SerializeField] // 0 = Triple Shot, 1 = Speed, 2 = Shield
-    private int powerupID;
+    [SerializeField] 
+    private int _powerupID; // 0 = Triple Shot, 1 = Speed, 2 = Shield
     [SerializeField]
     private AudioClip _powerupAudio;
 
-    // Update is called once per frame
     void Update()
     { 
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
@@ -33,7 +31,7 @@ public class Powerup : MonoBehaviour
 
             if (player != null)
             {
-                switch(powerupID)
+                switch(_powerupID)
                 {
                     case 0:
                         player.TripleShotActive();

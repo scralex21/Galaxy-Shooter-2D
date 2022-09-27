@@ -10,14 +10,8 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyContainer;
     [SerializeField]
     private GameObject[] _powerups;
-
     private bool _stopSpawning = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     public void StartSpawning()
     {
@@ -35,8 +29,7 @@ public class SpawnManager : MonoBehaviour
             GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5.0f);
-        }
-        
+        }    
     }
 
     IEnumerator SpawnPowerupRoutine()

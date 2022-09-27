@@ -18,17 +18,10 @@ public class Asteroid : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
-    // Update is called once per frame
     void Update()
-    {
-        // rotate object on zed axis
-        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
-        
+    { 
+        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);  
     }
-
-    //check for laser collision (Trigger)
-    //instantiate explosion at the position of the asteroid
-    //destroy the explosion after 3 seconds
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -38,6 +31,7 @@ public class Asteroid : MonoBehaviour
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();
             Destroy(this.gameObject, 0.25f);
+
             _uiManager.AsteroidDestroyedSequence();
             
         }

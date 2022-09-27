@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldActive = false;
+
     [SerializeField]
     private GameObject _shieldVisual;
 
@@ -32,13 +33,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _leftEngineDamage;
 
-
-    // variable to store the audio clip
     [SerializeField]
     private AudioClip _laserAudio;
     private AudioSource _audioSource;
 
-    // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -67,7 +65,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         CalculateMovement();
@@ -112,8 +109,6 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.0f, transform.position.y, 0);
         }
-
-
     }
 
     void FireLaser()
@@ -129,13 +124,11 @@ public class Player : MonoBehaviour
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
 
-        //play the laser audio clip
         _audioSource.Play();
     }
 
     public void Damage()
-    {
-        
+    {    
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
@@ -144,11 +137,6 @@ public class Player : MonoBehaviour
         }
 
         _lives = _lives - 1;
-
-        // if lives is 2
-        // Enable right engine
-        // else if lives is 1
-        // enable left engine
 
         if (_lives == 2)
         {
@@ -159,14 +147,25 @@ public class Player : MonoBehaviour
             _leftEngineDamage.SetActive(true);
         }
 
-
-
         _uiManaager.UpdateLives(_lives);
 
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "EnemyLaser")
+        {
+            Damage();
+            Destroy(other.gameObject);
+        }
+        if (other.tag == "EnemyLaserPair")
+        {
+            Destroy(other.gameObject);
         }
     }
 
@@ -206,7 +205,5 @@ public class Player : MonoBehaviour
         _uiManaager.UpdateScore(_score);
     }
 }    
-     // method to add 10 to score    
-     // communicate with the UI to update score
     
 

@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
-
 {
     [SerializeField]
     private bool _isGameOver = false;
@@ -19,6 +18,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) && _isGameOver == true)
         {
             SceneManager.LoadScene(0); // Main Menu
+        }
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
         }
     }
 
