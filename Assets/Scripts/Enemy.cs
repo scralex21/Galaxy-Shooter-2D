@@ -13,10 +13,16 @@ public class Enemy : MonoBehaviour
     private Player _player;
     private Animator _enemyExplosion;
     private AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _enemyLaserAudio;
+    private AudioSource _enemyLaserAudioSource;
 
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+
+        _enemyLaserAudioSource = GetComponent<AudioSource>();
+        _enemyLaserAudioSource.clip = _enemyLaserAudio;
 
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
@@ -61,6 +67,8 @@ public class Enemy : MonoBehaviour
             {
                 lasers[i].AssignEnemyLaser();
             }
+
+            _enemyLaserAudioSource.Play();
         }
     }
 

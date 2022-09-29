@@ -22,7 +22,14 @@ public class Player : MonoBehaviour
     private bool _isShieldActive = false;
 
     [SerializeField]
+    private GameObject _thruster;
+
+    [SerializeField]
+    private int _shieldStrength;
+    [SerializeField]
     private GameObject _shieldVisual;
+    [SerializeField]
+    private SpriteRenderer _shieldStatus;
 
     [SerializeField]
     private int _score;
@@ -85,6 +92,12 @@ public class Player : MonoBehaviour
         {
             transform.Translate(Vector3.right * horizontalInput * _speed * 2 * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * _speed * 2 * Time.deltaTime);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                transform.Translate(Vector3.right * horizontalInput * ((_speed * 2) * 2) * Time.deltaTime);
+                transform.Translate(Vector3.up * verticalInput * ((_speed * 2) * 2) * Time.deltaTime);
+            }
         }
         else
         {
@@ -109,6 +122,17 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.0f, transform.position.y, 0);
         }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(Vector3.right * horizontalInput * _speed * 2 * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * _speed * 2 * Time.deltaTime);
+            _thruster.SetActive(true);
+        }
+        else
+        {
+            _thruster.SetActive(false);
+        }
     }
 
     void FireLaser()
@@ -129,10 +153,9 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {    
-        if (_isShieldActive == true)
+        if (_isShieldActive == true && _shieldStrength <= 3)
         {
-            _isShieldActive = false;
-            _shieldVisual.SetActive(false);
+            ShieldStrength();
             return;
         }
 
@@ -171,8 +194,33 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
-        _isShieldActive = true;
-        _shieldVisual.SetActive(true);
+        if (_isShieldActive != true)
+        {
+            _isShieldActive = true;
+            _shieldStrength = 3;
+            _shieldVisual.SetActive(true);
+            _shieldStatus.color = Color.cyan;
+        }
+    }
+
+    void ShieldStrength()
+    {
+        _shieldStrength = _shieldStrength - 1;
+
+        switch (_shieldStrength)
+        {  
+            case 2:
+                _shieldStatus.color = Color.yellow;
+                break;
+            case 1:
+                _shieldStatus.color = Color.red;
+                break;
+            case 0:
+                _shieldVisual.SetActive(false);
+                _isShieldActive = false;
+                break;
+        }
+
     }
 
     public void TripleShotActive()
