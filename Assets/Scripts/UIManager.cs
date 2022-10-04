@@ -7,6 +7,11 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField]
     private Text _scoreText;
+
+    [SerializeField]
+    private Text _ammoText;
+    private bool _ammoEmpty;
+
     [SerializeField]
     private Text _gameOverText;
     [SerializeField]
@@ -17,6 +22,7 @@ public class UIManager : MonoBehaviour
     private Text _destroyAsteroidText;
     [SerializeField]
     private Text _enemiesInboundText;
+
     [SerializeField]
     private Image _LivesImg;
     [SerializeField]
@@ -27,6 +33,8 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         _scoreText.text = "Score: " + 0;
+        _ammoText.text = "Ammo: 30/30";
+
         _destroyAsteroidText.gameObject.SetActive(true);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
@@ -34,6 +42,35 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score: " + playerScore;
+    }
+
+    public void UpdateAmmo(int ammoCount)
+    {
+        if (ammoCount > 0)
+        {
+            _ammoEmpty = false;
+            _ammoText.text = "Ammo: " + ammoCount + "/30";
+            _ammoText.color = Color.white;
+        }
+        else if (ammoCount <= 0)
+        {
+            _ammoText.text = "Ammo: 0/30";
+            _ammoEmpty = true;
+            StartCoroutine(NoAmmo());
+        }
+    }
+
+    IEnumerator NoAmmo()
+    {
+        while (_ammoEmpty == true)
+        {
+            _ammoText.color = Color.red;
+            _ammoText.text = "Ammo: 0/30";
+            yield return new WaitForSeconds(0.30f);
+            _ammoText.text = "";
+            yield return new WaitForSeconds(0.30f);
+        }
+        
     }
 
     public void UpdateLives(int currentlives)

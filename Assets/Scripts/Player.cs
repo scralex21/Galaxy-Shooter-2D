@@ -6,13 +6,17 @@ public class Player : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 5f;
+
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
+    private int _ammoCount = 30;
+    [SerializeField]
     private float _fireRate = 0.15f;
     private float _canFire = -1f;
+
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -42,6 +46,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private AudioClip _laserAudio;
+    [SerializeField]
+    private AudioClip _noAmmoAudio;
     private AudioSource _audioSource;
 
     void Start()
@@ -78,6 +84,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
+            if (_ammoCount == 0)
+            {
+                AudioSource.PlayClipAtPoint(_noAmmoAudio, transform.position);
+                return;
+            }
+
             FireLaser();
         }
 
@@ -139,16 +151,45 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
 
-        if (_isTripleShotActive == true)
+        if (_ammoCount <= 30)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+
+            if (_isTripleShotActive == true)
+            {
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                _ammoCount = _ammoCount - 3;
+                _uiManaager.UpdateAmmo(_ammoCount);
+            }
+            else
+            {
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                _ammoCount = _ammoCount - 1;
+                _uiManaager.UpdateAmmo(_ammoCount);
+            }
+
+            AmmoCap();
         }
 
         _audioSource.Play();
+    }
+
+    public void AmmoCollected()
+    {
+        _ammoCount = _ammoCount + 10;
+        AmmoCap();
+        _uiManaager.UpdateAmmo(_ammoCount);
+    }
+
+    void AmmoCap()
+    {
+        if (_ammoCount <= 0)
+        {
+            _ammoCount = 0;
+        }
+        else if ( _ammoCount > 30)
+        {
+            _ammoCount = 30;
+        }
     }
 
     public void Damage()
