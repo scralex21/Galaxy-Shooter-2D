@@ -1105,6 +1105,7 @@ MonoBehaviour:
   - {fileID: 6943496919523971949, guid: f587ec1a7d291604e9df3c85b4c0a6e6, type: 3}
   - {fileID: 8958991534360250538, guid: ffbccaa972da23949bb177adf39f29ae, type: 3}
   - {fileID: 9066227092798944909, guid: 6515adc9b1b70244084b9daf8db687a4, type: 3}
+  - {fileID: 5598326970238103573, guid: 83b135fb5086a3e428478c4ec2f615dc, type: 3}
 --- !u!4 &1078934173
 Transform:
   m_ObjectHideFlags: 0
@@ -1353,8 +1354,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 3.5
-  _laserPrefab: {fileID: 1174831929966735360, guid: f30edaf830c88f440aea90fc8b62d99c, type: 3}
-  _tripleShotPrefab: {fileID: 2279996881119444044, guid: 64e106714c5302349ada79aaf6cc6a68, type: 3}
+  _laserPrefab: {fileID: 1174831929966735360, guid: aa5c165b2a9661345bd6dfe795245c88, type: 3}
+  _tripleShotPrefab: {fileID: 5059096669750494835, guid: 3e0c878eead75b64b8cde4ca09167cb2, type: 3}
   _ammoCount: 30
   _fireRate: 0.15
   _lives: 3
@@ -1426,7 +1427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1293343785}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12, y: -2.56, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 213871792}

@@ -55,6 +55,7 @@ public class UIManager : MonoBehaviour
         else if (ammoCount <= 0)
         {
             _ammoText.text = "Ammo: 0/30";
+            _ammoText.color = Color.red;
             _ammoEmpty = true;
             StartCoroutine(NoAmmo());
         }
@@ -64,13 +65,11 @@ public class UIManager : MonoBehaviour
     {
         while (_ammoEmpty == true)
         {
-            _ammoText.color = Color.red;
             _ammoText.text = "Ammo: 0/30";
             yield return new WaitForSeconds(0.30f);
             _ammoText.text = "";
             yield return new WaitForSeconds(0.30f);
         }
-        
     }
 
     public void UpdateLives(int currentlives)

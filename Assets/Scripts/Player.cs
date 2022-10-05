@@ -202,22 +202,37 @@ public class Player : MonoBehaviour
 
         _lives = _lives - 1;
 
-        if (_lives == 2)
+        switch (_lives)
         {
-            _rightEngineDamage.SetActive(true);
+            case 2:
+                _rightEngineDamage.SetActive(true);
+                break;
+            case 1:
+                _leftEngineDamage.SetActive(true);
+                break;
+            case 0:
+                _spawnManager.OnPlayerDeath();
+                Destroy(this.gameObject);
+                break;
         }
-        else if (_lives == 1)
-        {
-            _leftEngineDamage.SetActive(true);
-        }
-
         _uiManaager.UpdateLives(_lives);
+    }
 
-        if (_lives < 1)
+     public void HealthCollected()
+    {
+        _lives = _lives + 1;
+        
+        if (_lives >= 3)
         {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
+            _lives = 3;
+            _rightEngineDamage.SetActive(false);
         }
+        else if (_lives == 2)
+        {
+            _leftEngineDamage.SetActive(false);
+        }
+
+        _uiManaager.UpdateLives(_lives);   
     }
 
     private void OnTriggerEnter2D(Collider2D other)
