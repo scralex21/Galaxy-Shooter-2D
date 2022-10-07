@@ -13,6 +13,9 @@ public class UIManager : MonoBehaviour
     private bool _ammoEmpty;
 
     [SerializeField]
+    private Text _missileCountText;
+
+    [SerializeField]
     private Text _gameOverText;
     [SerializeField]
     private Text _restartText;
@@ -27,6 +30,12 @@ public class UIManager : MonoBehaviour
     private Image _LivesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
+
+    [SerializeField]
+    private Image _homingMissileImage;
+    [SerializeField]
+    private Image _bombImage;
+
     private GameManager _gameManager;
     private bool _isAsteroidDestroyed;
 
@@ -70,6 +79,41 @@ public class UIManager : MonoBehaviour
             _ammoText.text = "";
             yield return new WaitForSeconds(0.30f);
         }
+    }
+
+    public void MissilePowerupOn()
+    {
+        _homingMissileImage.gameObject.SetActive(true);
+        _missileCountText.gameObject.SetActive(true);
+        _missileCountText.text = "x3";
+    }
+    
+    public void MissilePowerupOff()
+    {
+        _homingMissileImage.gameObject.SetActive(false);
+        _missileCountText.gameObject.SetActive(false);
+    }
+
+    public void MissileCount(int missileCount)
+    {
+        if (missileCount == 2)
+        {
+            _missileCountText.text = "x2";
+        }
+        else if (missileCount == 1)
+        {
+            _missileCountText.text = "x1";
+        }
+    }
+
+    public void BombPowerupOn()
+    {
+        _bombImage.gameObject.SetActive(true);
+    }
+
+    public void BombPowerUpOff()
+    {
+        _bombImage.gameObject.SetActive(false);
     }
 
     public void UpdateLives(int currentlives)

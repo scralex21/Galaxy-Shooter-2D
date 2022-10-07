@@ -103,6 +103,24 @@ public class Enemy : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.37f);
         }
+
+        if (other.tag == "Missile")
+        {
+            Destroy(other.gameObject);
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            Destroy(this.gameObject, 2.37f);
+            
+        }
+
+        if (other.tag == "Bomb")
+        {
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            Destroy(this.gameObject, 2.37f);
+        }
     }
 }
 

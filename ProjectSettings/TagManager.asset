@@ -9,6 +9,8 @@ TagManager:
   - EnemyLaser
   - PowerUp
   - EnemyLaserPair
+  - Missile
+  - Bomb
   layers:
   - Default
   - TransparentFX

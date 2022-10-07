@@ -17,6 +17,18 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.15f;
     private float _canFire = -1f;
 
+    private bool _isRarePowerUpActive = false;
+
+    [SerializeField]
+    private GameObject _missilePrefab;
+    [SerializeField]
+    private int _missileCount = 3;
+    private bool _isHomingMissileActive = false;
+
+    [SerializeField]
+    private GameObject _bombPrefab;
+    private bool _isBombActive;
+
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
@@ -81,18 +93,24 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
-            if (_ammoCount == 0)
+            if (_isRarePowerUpActive != true)
             {
-                AudioSource.PlayClipAtPoint(_noAmmoAudio, transform.position);
-                return;
-            }
+                if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+                {
+                    if (_ammoCount == 0)
+                    {
+                        AudioSource.PlayClipAtPoint(_noAmmoAudio, transform.position);
+                        return;
+                    }
 
-            FireLaser();
+                    FireLaser();
+                }
+            }
         }
 
+        HomingMissileFire();
+        Bomb();
     }
 
     void CalculateMovement()
@@ -301,6 +319,54 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
+    }
+
+    public void HomingMissileActive()
+    {
+        _isRarePowerUpActive = true;
+        _isHomingMissileActive = true;
+        _uiManaager.MissilePowerupOn();
+        _missileCount = 3;
+    }
+
+    void HomingMissileFire()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _isHomingMissileActive == true)
+        {
+            Instantiate(_missilePrefab, transform.position + new Vector3(0, 1.10f, 0), Quaternion.identity);
+            _missileCount = _missileCount - 1;
+            _uiManaager.MissileCount(_missileCount);
+
+            if (_missileCount == 0)
+            {
+                _isRarePowerUpActive = false;
+                _isHomingMissileActive = false;
+                _uiManaager.MissilePowerupOff();
+            }
+        }
+    }
+
+    public void BombActive()
+    {
+        _isRarePowerUpActive = true;
+        _isBombActive = true;
+        _uiManaager.BombPowerupOn();
+    }
+
+    void Bomb()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _isBombActive == true)
+        {
+            Instantiate(_bombPrefab, transform.position + new Vector3(0, -1.05f, 0), Quaternion.identity);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+
+            {
+                _isRarePowerUpActive = false;
+                _isBombActive = false;
+                _uiManaager.BombPowerUpOff();
+            }
+        }
     }
 
     public void AddScore()
