@@ -8,8 +8,6 @@ public class Powerup : MonoBehaviour
     private float _speed = 3f;
     [SerializeField] 
     private int _powerupID;
-    // 0 = Triple Shot, 1 = Speed, 2 = Shield, 3 = Ammo, 4 = Health Collectible,
-    // 5 = Homing Missile Powerup(rare)
     [SerializeField]
     private AudioClip _powerupAudio;
 
@@ -36,25 +34,28 @@ public class Powerup : MonoBehaviour
                 switch(_powerupID)
                 {
                     case 0:
-                        player.TripleShotActive();
+                        player.TripleShotActive(); // Triple Shot
                         break;
                     case 1:
-                        player.SpeedBoostActive();
+                        player.SpeedBoostActive(); // Speed Boost
                         break;
                     case 2:
-                        player.ShieldActive();
+                        player.ShieldActive(); // Shield
                         break;
                     case 3:
-                        player.AmmoCollected();
+                        player.AmmoCollected(); // Ammo Pickup
                         break;
                     case 4:
-                        player.HealthCollected();
+                        player.HealthCollected(); // Health Pickup
                         break;
                     case 5:
-                        player.HomingMissileActive();
+                        player.HomingMissileActive(); // Homing Missile (Rare)
                         break;
                     case 6:
-                        player.BombActive();
+                        player.BombActive(); // Bomb (Rare)
+                        break;
+                    case 7:
+                        player.SuperLaserActive(); // Super Laser (Rare)
                         break;
                     default:
                         Debug.Log("Default Value");

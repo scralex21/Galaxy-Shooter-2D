@@ -107,6 +107,12 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Missile")
         {
             Destroy(other.gameObject);
+
+            if (_player != null)
+            {
+                _player.AddScore();
+            }
+
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
@@ -116,6 +122,24 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Bomb")
         {
+            if (_player != null)
+            {
+                _player.AddScore();
+            }
+
+            _enemyExplosion.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            _audioSource.Play();
+            Destroy(this.gameObject, 2.37f);
+        }
+
+        if (other.tag == "SuperLaser")
+        {
+            if (_player != null)
+            {
+                _player.AddScore();
+            }
+
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();

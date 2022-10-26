@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bomb : MonoBehaviour
 {
     private Animator _bombExplosion;
+    private float _rotateSpeed = 20f;
 
     private void Start()
     {
@@ -16,12 +17,17 @@ public class Bomb : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Enemy")
         {
             _bombExplosion.SetTrigger("OnBombExplosion");
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, 0.65f);
             
         }
     }

@@ -35,6 +35,8 @@ public class UIManager : MonoBehaviour
     private Image _homingMissileImage;
     [SerializeField]
     private Image _bombImage;
+    [SerializeField]
+    private Image _superLaserImage;
 
     private GameManager _gameManager;
     private bool _isAsteroidDestroyed;
@@ -114,6 +116,16 @@ public class UIManager : MonoBehaviour
     public void BombPowerUpOff()
     {
         _bombImage.gameObject.SetActive(false);
+    }
+
+    public void SuperLaserPowerUpOn()
+    {
+        _superLaserImage.gameObject.SetActive(true);
+    }
+
+    public void SuperLaserPowerUpOff()
+    {
+        _superLaserImage.gameObject.SetActive(false);
     }
 
     public void UpdateLives(int currentlives)

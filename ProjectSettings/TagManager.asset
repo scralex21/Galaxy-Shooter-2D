@@ -11,6 +11,7 @@ TagManager:
   - EnemyLaserPair
   - Missile
   - Bomb
+  - SuperLaser
   layers:
   - Default
   - TransparentFX

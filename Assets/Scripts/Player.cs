@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     private bool _isBombActive;
 
     [SerializeField]
+    private GameObject _superLaser;
+    private bool _isSuperLaserActive = false;
+
+    [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
 
@@ -109,8 +113,10 @@ public class Player : MonoBehaviour
             }
         }
 
+        //Rare Powerup Functions, When Rare Powerup is true, these become the function of the space key
         HomingMissileFire();
         Bomb();
+        SuperLaser();
     }
 
     void CalculateMovement()
@@ -129,6 +135,13 @@ public class Player : MonoBehaviour
                 transform.Translate(Vector3.up * verticalInput * ((_speed * 2) * 2) * Time.deltaTime);
             }
         }
+
+        if (_superLaser.activeInHierarchy)
+        {
+            transform.Translate(Vector3.right * horizontalInput * (_speed / 2) * Time.deltaTime);
+            transform.Translate(Vector3.up * verticalInput * (_speed / 2) * Time.deltaTime);
+        }
+
         else
         {
             transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
@@ -357,7 +370,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && _isBombActive == true)
         {
-            Instantiate(_bombPrefab, transform.position + new Vector3(0, -1.05f, 0), Quaternion.identity);
+            Instantiate(_bombPrefab, transform.position + new Vector3(0, -1.25f, 0), Quaternion.identity);
 
             if (Input.GetKeyDown(KeyCode.Space))
 
@@ -367,6 +380,32 @@ public class Player : MonoBehaviour
                 _uiManaager.BombPowerUpOff();
             }
         }
+    }
+
+    public void SuperLaserActive()
+    {
+        _isRarePowerUpActive = true;
+        _isSuperLaserActive = true;
+        _uiManaager.SuperLaserPowerUpOn();
+    }
+
+    void SuperLaser()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _isSuperLaserActive == true)
+        {
+            _superLaser.SetActive(true);
+            _uiManaager.SuperLaserPowerUpOff();
+            StartCoroutine(SuperLaserCooldown());
+        }
+    }
+
+    IEnumerator SuperLaserCooldown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _superLaser.SetActive(false);
+
+        _isSuperLaserActive = false;
+        _isRarePowerUpActive = false;
     }
 
     public void AddScore()
