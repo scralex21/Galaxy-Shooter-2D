@@ -13,6 +13,11 @@ public class UIManager : MonoBehaviour
     private bool _ammoEmpty;
 
     [SerializeField]
+    private Slider _thrusterBar;
+    [SerializeField]
+    private Image _thrusterBarColor;
+
+    [SerializeField]
     private Text _missileCountText;
 
     [SerializeField]
@@ -25,6 +30,10 @@ public class UIManager : MonoBehaviour
     private Text _destroyAsteroidText;
     [SerializeField]
     private Text _enemiesInboundText;
+    [SerializeField]
+    private Text _waveText;
+    [SerializeField]
+    private Text _thrusterMalfunctionText;
 
     [SerializeField]
     private Image _LivesImg;
@@ -46,7 +55,7 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + 0;
         _ammoText.text = "Ammo: 30/30";
 
-        _destroyAsteroidText.gameObject.SetActive(true);
+        //_destroyAsteroidText.gameObject.SetActive(true);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
@@ -81,6 +90,37 @@ public class UIManager : MonoBehaviour
             _ammoText.text = "";
             yield return new WaitForSeconds(0.30f);
         }
+    }
+
+    public void WaveNumber(int currentWave)
+    {
+        _waveText.text = "Wave " + currentWave;
+        _waveText.gameObject.SetActive(true);
+        StartCoroutine(WaveNumberDisable());
+    }
+
+    IEnumerator WaveNumberDisable()
+    {
+        while (_waveText == true)
+        {
+            yield return new WaitForSeconds(3.0f);
+            _waveText.gameObject.SetActive(false);
+        }
+    }
+
+    public void ThrusterMalfunctionOn()
+    {
+        _thrusterMalfunctionText.gameObject.SetActive(true);
+    }
+
+    public void ThrusterMalfunctionOff()
+    {
+        _thrusterMalfunctionText.gameObject.SetActive(false);
+    }
+
+    public void ThrusterBar(float thrusterpower)
+    {
+        _thrusterBar.value = thrusterpower;
     }
 
     public void MissilePowerupOn()

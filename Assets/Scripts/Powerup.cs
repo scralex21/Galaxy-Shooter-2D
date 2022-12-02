@@ -46,15 +46,18 @@ public class Powerup : MonoBehaviour
                         player.AmmoCollected(); // Ammo Pickup
                         break;
                     case 4:
-                        player.HealthCollected(); // Health Pickup
+                        player.SlowSpeedActive(); // Slow Powerup
                         break;
                     case 5:
-                        player.HomingMissileActive(); // Homing Missile (Rare)
+                        player.HealthCollected(); // Health Pickup (Rare)
                         break;
                     case 6:
-                        player.BombActive(); // Bomb (Rare)
+                        player.HomingMissileActive(); // Homing Missile (Rare)
                         break;
                     case 7:
+                        player.BombActive(); // Bomb (Rare)
+                        break;
+                    case 8:
                         player.SuperLaserActive(); // Super Laser (Rare)
                         break;
                     default:

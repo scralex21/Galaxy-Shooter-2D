@@ -6,6 +6,7 @@ public class HomingMissile : MonoBehaviour
 {
 
     private GameObject _enemyTarget;
+    [SerializeField]
     private GameObject[] _enemy;
     private float _speed = 8f;
 

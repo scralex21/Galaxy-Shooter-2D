@@ -40,9 +40,18 @@ public class Player : MonoBehaviour
     private bool _isTripleShotActive = false;
     private bool _isSpeedBoostActive = false;
     private bool _isShieldActive = false;
+    [SerializeField]
+    private bool _isSlowSpeedActive = false;
 
     [SerializeField]
     private GameObject _thruster;
+    [SerializeField]
+    private bool _isThrustersActive = false;
+    [SerializeField]
+    private float _thrusterPower = 100f;
+    [SerializeField]
+    private float _thrusterUsage = 0.1f;
+
 
     [SerializeField]
     private int _shieldStrength;
@@ -66,12 +75,15 @@ public class Player : MonoBehaviour
     private AudioClip _noAmmoAudio;
     private AudioSource _audioSource;
 
+    private MainCamera _cameraShake; 
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
 
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManaager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<MainCamera>();
         _audioSource = GetComponent<AudioSource>();
 
         if (_spawnManager == null)
@@ -82,6 +94,11 @@ public class Player : MonoBehaviour
         if (_uiManaager == null)
         {
             Debug.LogError("The UI Manager is NULL");
+        }
+
+        if (_cameraShake == null)
+        {
+            Debug.LogError("The Main Camera Shake is NULL");
         }
 
         if (_audioSource == null)
@@ -97,6 +114,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+
         {
             if (_isRarePowerUpActive != true)
             {
@@ -111,12 +129,17 @@ public class Player : MonoBehaviour
                     FireLaser();
                 }
             }
+
+            else
+            {
+                //Rare Powerup Functions, When Rare Powerup is true, these become the function of the space key
+                HomingMissileFire();
+                Bomb();
+                SuperLaser();
+            }
         }
 
-        //Rare Powerup Functions, When Rare Powerup is true, these become the function of the space key
-        HomingMissileFire();
-        Bomb();
-        SuperLaser();
+       
     }
 
     void CalculateMovement()
@@ -136,14 +159,21 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (_superLaser.activeInHierarchy)
+        if (_superLaser.activeInHierarchy || _isSlowSpeedActive == true)
         {
             transform.Translate(Vector3.right * horizontalInput * (_speed / 2) * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * (_speed / 2) * Time.deltaTime);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _uiManaager.ThrusterMalfunctionOn();
+                return;
+            }
         }
 
         else
         {
+            _uiManaager.ThrusterMalfunctionOff();
             transform.Translate(Vector3.right * horizontalInput * _speed * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * _speed * Time.deltaTime);
         }
@@ -166,17 +196,51 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(11.0f, transform.position.y, 0);
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && _thrusterPower > 0)
         {
             transform.Translate(Vector3.right * horizontalInput * _speed * 2 * Time.deltaTime);
             transform.Translate(Vector3.up * verticalInput * _speed * 2 * Time.deltaTime);
             _thruster.SetActive(true);
+            StartCoroutine(ThrusterActive());
         }
+
         else
         {
             _thruster.SetActive(false);
+            StartCoroutine(ThrusterRegen());
+        }
+
+    }
+
+    IEnumerator ThrusterActive()
+    {
+        _isThrustersActive = true;
+
+        while (Input.GetKey(KeyCode.LeftShift) && _thrusterPower > 0)
+        {
+            yield return null;
+            _thrusterPower -= _thrusterUsage * Time.deltaTime;
+            _uiManaager.ThrusterBar(_thrusterPower);
         }
     }
+
+    IEnumerator ThrusterRegen()
+    {
+        _isThrustersActive = false;
+
+        if (_thrusterPower < 100 && _isThrustersActive == false)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
+
+        while (_thrusterPower < 100 && _isThrustersActive == false)
+        {
+            yield return null;
+            _thrusterPower += _thrusterUsage * Time.deltaTime;
+            _uiManaager.ThrusterBar(_thrusterPower);
+        }
+    }
+
 
     void FireLaser()
     {
@@ -224,7 +288,7 @@ public class Player : MonoBehaviour
     }
 
     public void Damage()
-    {    
+    {
         if (_isShieldActive == true && _shieldStrength <= 3)
         {
             ShieldStrength();
@@ -232,6 +296,7 @@ public class Player : MonoBehaviour
         }
 
         _lives = _lives - 1;
+        _cameraShake.CameraShake();
 
         switch (_lives)
         {
@@ -332,6 +397,19 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isSpeedBoostActive = false;
+    }
+
+    public void SlowSpeedActive()
+    {
+        _isSlowSpeedActive = true;
+        StartCoroutine(SlowSpeedPowerDown());
+    }
+
+    IEnumerator SlowSpeedPowerDown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isSlowSpeedActive = false;
+        _uiManaager.ThrusterMalfunctionOff();
     }
 
     public void HomingMissileActive()
