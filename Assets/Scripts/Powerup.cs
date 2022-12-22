@@ -11,6 +11,16 @@ public class Powerup : MonoBehaviour
     [SerializeField]
     private AudioClip _powerupAudio;
 
+    [SerializeField]
+    private GameObject _explosionPrefab;
+
+    private Player _player;
+
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
+
     void Update()
     { 
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
@@ -19,6 +29,12 @@ public class Powerup : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void MoveToPlayer()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, _player.transform.position,
+            _speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -66,6 +82,17 @@ public class Powerup : MonoBehaviour
                 }
             }
             Destroy(this.gameObject);
+        }
+
+        if (other.tag == "EnemyLaser")
+        {
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(other.gameObject);
+            Destroy(this.gameObject);
+        }
+        if (other.tag == "EnemyLaserPair")
+        {
+            Destroy(other.gameObject);
         }
     }
 }

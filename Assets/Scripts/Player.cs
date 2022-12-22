@@ -75,7 +75,8 @@ public class Player : MonoBehaviour
     private AudioClip _noAmmoAudio;
     private AudioSource _audioSource;
 
-    private MainCamera _cameraShake; 
+    private MainCamera _cameraShake;
+    private Powerup _powerUp;
 
     void Start()
     {
@@ -85,6 +86,8 @@ public class Player : MonoBehaviour
         _uiManaager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<MainCamera>();
         _audioSource = GetComponent<AudioSource>();
+        //_powerUp = GameObject.FindGameObjectWithTag("PowerUp").GetComponent<Powerup>();
+
 
         if (_spawnManager == null)
         {
@@ -114,32 +117,30 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        PowerUpDetect();
 
+
+        if (_isRarePowerUpActive != true)
         {
-            if (_isRarePowerUpActive != true)
+            if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
             {
-                if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+                if (_ammoCount == 0)
                 {
-                    if (_ammoCount == 0)
-                    {
-                        AudioSource.PlayClipAtPoint(_noAmmoAudio, transform.position);
-                        return;
-                    }
-
-                    FireLaser();
+                    AudioSource.PlayClipAtPoint(_noAmmoAudio, transform.position);
+                    return;
                 }
-            }
 
-            else
-            {
-                //Rare Powerup Functions, When Rare Powerup is true, these become the function of the space key
-                HomingMissileFire();
-                Bomb();
-                SuperLaser();
+                FireLaser();
             }
         }
 
-       
+        else
+        {
+            //Rare Powerup Functions, When Rare Powerup is true, these become the function of the space key
+            HomingMissileFire();
+            Bomb();
+            SuperLaser();
+        }
     }
 
     void CalculateMovement()
@@ -238,6 +239,24 @@ public class Player : MonoBehaviour
             yield return null;
             _thrusterPower += _thrusterUsage * Time.deltaTime;
             _uiManaager.ThrusterBar(_thrusterPower);
+        }
+    }
+
+    void PowerUpDetect()
+    {
+        RaycastHit2D powerupDetect = Physics2D.CircleCast(transform.position, 5.5f, Vector3.down,
+         LayerMask.GetMask("PowerUps"));
+
+        if (powerupDetect.collider != null)
+        {
+            if (powerupDetect.collider.CompareTag("PowerUp"))
+            {
+                Debug.Log("The Powerup is in range");
+                if (Input.GetKey(KeyCode.C))
+                {
+                    _powerUp.MoveToPlayer();
+                }
+            }
         }
     }
 

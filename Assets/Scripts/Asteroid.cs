@@ -29,7 +29,7 @@ public class Asteroid : MonoBehaviour
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
-            int currentWave = 1;
+            int currentWave = 10;
             _uiManager.WaveNumber(currentWave);
             _spawnManager.StartSpawning(currentWave);
             Destroy(this.gameObject, 0.25f);

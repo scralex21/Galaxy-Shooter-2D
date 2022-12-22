@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8335575799074952834}
   - component: {fileID: 5078578900883177573}
   - component: {fileID: 5336393255245095457}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Super Laser Powerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,6 +100,7 @@ MonoBehaviour:
   _speed: 3
   _powerupID: 8
   _powerupAudio: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosionPrefab: {fileID: 5742739400418054746, guid: ccf5db32da21b4b4091cbf90de1d34b0, type: 3}
 --- !u!50 &5078578900883177573
 Rigidbody2D:
   serializedVersion: 4

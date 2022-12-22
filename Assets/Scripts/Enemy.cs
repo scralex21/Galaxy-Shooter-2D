@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     private AudioClip _enemyLaserAudio;
     private AudioSource _enemyLaserAudioSource;
     private SpawnManager _spawnManager;
-
+    [SerializeField]
     private int _enemyMovement;
 
     [SerializeField]
@@ -27,7 +27,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private bool _isShieldActive;
     private int _shieldID;
-   
+
+    private bool _destroyPowerUp;
+
     void Start()
     {
         _enemyMovement = Random.Range(1, 5);
@@ -52,7 +54,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Player is NULL");
         }
-        
+
         _enemyExplosion = GetComponent<Animator>();
         if (_enemyExplosion == null)
         {
@@ -64,6 +66,7 @@ public class Enemy : MonoBehaviour
     {
         EnemyMovement();
         EnemyFire();
+        FireAtPowerup();
     }
 
     void EnemyMovement()
@@ -81,7 +84,10 @@ public class Enemy : MonoBehaviour
                 break;
             case 4:
                 transform.Translate(Vector3.right * _speed * Time.deltaTime);
-                break; 
+                break;
+            case 5:
+                transform.Translate(Vector3.left * _speed * Time.deltaTime);
+                break;
             default:
                 break;
         }
@@ -126,6 +132,29 @@ public class Enemy : MonoBehaviour
             }
 
             _enemyLaserAudioSource.Play();
+        }
+    }
+
+    void FireAtPowerup()
+    {
+        Vector3 enemyOffset = (transform.position + new Vector3(0, -0.75f, 0));
+
+        RaycastHit2D hit = Physics2D.Raycast(enemyOffset, Vector3.down, 10f, LayerMask.GetMask("PowerUps"));
+        Debug.DrawRay(enemyOffset, Vector3.down * 10f, Color.red);
+
+        if (hit.collider != null)
+        {
+            if (hit.collider.CompareTag("PowerUp"))
+            {
+                Debug.Log("The PowerUp was detected");
+                GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                for (int i = 0; i < lasers.Length; i++)
+                {
+                    lasers[i].AssignEnemyLaser();
+                }
+            }
         }
     }
 
@@ -245,6 +274,8 @@ public class Enemy : MonoBehaviour
             _spawnManager.UpdateEnemyCount();
             Destroy(this.gameObject, 2.37f);
         }
+
+       
     }
 }
 

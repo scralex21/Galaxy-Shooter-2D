@@ -21,6 +21,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private Vector3[] _enemySpawnLocation;
 
+    [SerializeField]
+    private GameObject _bossPrefab;
+
     private bool _powerupSpawn;
 
     [SerializeField]
@@ -50,7 +53,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning(int currentWave)
     {
-        if (currentWave <= 6)
+        if (currentWave <= 10)
         {
             _stopSpawning = false;
             _enemiesDead = 0;
@@ -88,6 +91,24 @@ public class SpawnManager : MonoBehaviour
                     _enemiesLeft = 17;
                     _maxEnemies = 17;
                     StartCoroutine(SpawnEnemyRoutineMedium());
+                    break;
+                case 7:
+                    _enemiesLeft = 18;
+                    _maxEnemies = 18;
+                    StartCoroutine(SpawnEnemyRoutineMedium());
+                    break;
+                case 8:
+                    _enemiesLeft = 12;
+                    _maxEnemies = 12;
+                    StartCoroutine(SpawnEnemyRoutineHard());
+                    break;
+                case 9:
+                    _enemiesLeft = 15;
+                    _maxEnemies = 15;
+                    StartCoroutine(SpawnEnemyRoutineHard());
+                    break;
+                case 10:
+                    Instantiate(_bossPrefab, transform.position + new Vector3(0, 11f, 0), Quaternion.identity);
                     break;
                 default:
                     break;
@@ -131,6 +152,30 @@ public class SpawnManager : MonoBehaviour
             for (var i = 0; i < _enemyType.Length; i++)
             {
                 GameObject newEnemy = Instantiate(_enemyType[Random.Range(0, 3)], _enemySpawnLocation[(Random.Range(0, 3))],
+                  Quaternion.identity);
+                newEnemy.transform.parent = _enemyContainer.transform;
+
+                _enemiesLeft--;
+                if (_enemiesLeft <= 0)
+                {
+                    _enemiesLeft = 0;
+                    _stopSpawning = true;
+                    yield break;
+                }
+                yield return new WaitForSeconds(3.0f);
+            }
+        }
+    }
+
+    IEnumerator SpawnEnemyRoutineHard()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        while (_stopSpawning == false && _enemiesDead <= _maxEnemies)
+        {
+            for (var i = 0; i < _enemyType.Length; i++)
+            {
+                GameObject newEnemy = Instantiate(_enemyType[Random.Range(0, 5)], _enemySpawnLocation[(Random.Range(0, 3))],
                   Quaternion.identity);
                 newEnemy.transform.parent = _enemyContainer.transform;
 

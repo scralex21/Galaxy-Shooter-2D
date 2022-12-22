@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmartEnemy : MonoBehaviour
+public class EliteEnemy : MonoBehaviour
 {
     private Player _player;
     [SerializeField]
@@ -10,20 +10,13 @@ public class SmartEnemy : MonoBehaviour
     private AudioSource _audioSource;
     private SpawnManager _spawnManager;
 
-    [SerializeField]
     private float _speed = 4f;
-    [SerializeField]
-    private bool _followingPlayer;
-    [SerializeField]
-    private bool _isEnemyAttacking;
-
-    [SerializeField]
-    private GameObject _enemyMissilePrefab;
-    private float _fireRate = 1f;
+    private float _fireRate = 3f;
     private float _canFire = -1f;
 
-    private int _movementType;
-    
+    [SerializeField]
+    private GameObject _eliteMissilePrefab;
+
 
     void Start()
     {
@@ -39,36 +32,18 @@ public class SmartEnemy : MonoBehaviour
         {
             Debug.Log("The Spawn Manager is NULL");
         }
-
-        _movementType = Random.Range(1, 10);
     }
 
     void Update()
     {
-        EnemyMovement();
-        EnemyAttack();
+        Movement();
+        Avoid();
+        Attack();
     }
 
-    void EnemyMovement()
+    void Movement()
     {
-        if (_movementType > 3) // 70% chance enemy just moves down
-        {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        }
-
-        if (_movementType <= 3)  // 30% chance enemy will follow
-        {
-            float xPos = _player.transform.position.x;
-            float yPos = _player.transform.position.y;
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(xPos, yPos - 4f),
-                _speed * Time.deltaTime);
-
-            if (transform.position.y == yPos - 4f)
-            {
-                _followingPlayer = true;
-                StartCoroutine(EnemyFollow());
-            }
-        }
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
         if (transform.position.y < -5.5f)
         {
@@ -77,46 +52,28 @@ public class SmartEnemy : MonoBehaviour
         }
     }
 
-    IEnumerator EnemyFollow()
+    void Avoid()
     {
-        while (_followingPlayer == true)
-        {
-            yield return new WaitForSeconds(5.0f);
-            _speed = 0f;
-        }  
-    }
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, 3f, Vector3.down,
+        LayerMask.GetMask("Laser"));
 
-    void EnemyAttack()
-    {
-        if (_speed == 0)
+        if (hit.collider != null)
         {
-            _isEnemyAttacking = true;
-            _followingPlayer = false;
-        }
-
-        if (_speed == 4f)
-        {
-            _isEnemyAttacking = false;
-        }
-
-        if (_isEnemyAttacking == true)
-        {
-            StartCoroutine(EnemyBeginAttack());
-        }
-    }
-
-    IEnumerator EnemyBeginAttack()
-    {
-        while (_isEnemyAttacking == true)
-        {
-            if (Time.time > _canFire)
+            if (hit.collider.CompareTag("Laser"))
             {
-                _canFire = Time.time + _fireRate;
-                Instantiate(_enemyMissilePrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+                Debug.Log("The Player Laser was detected!");
+                transform.Translate(Vector3.right * (_speed * 3) * Time.deltaTime);
             }
+        }
+    }
 
-            yield return new WaitForSeconds(4.0f);
-            _speed = 4f;
+    void Attack()
+    {
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canFire = Time.time + _fireRate;
+            Instantiate(_eliteMissilePrefab, transform.position + new Vector3(0, -0.85f, 0), Quaternion.identity);
         }
     }
 

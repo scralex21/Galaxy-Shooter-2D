@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2163658184156982997}
   - component: {fileID: 15011146268438221}
   - component: {fileID: 8174963139050059988}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ammo Powerup
   m_TagString: PowerUp
   m_Icon: {fileID: 0}
@@ -49,6 +49,7 @@ MonoBehaviour:
   _speed: 3
   _powerupID: 3
   _powerupAudio: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosionPrefab: {fileID: 5742739400418054746, guid: ccf5db32da21b4b4091cbf90de1d34b0, type: 3}
 --- !u!212 &2163658184156982997
 SpriteRenderer:
   m_ObjectHideFlags: 0
