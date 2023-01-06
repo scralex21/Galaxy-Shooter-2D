@@ -7,6 +7,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField]
     private Text _scoreText;
+    [SerializeField]
+    private Text _waveSubText;
 
     [SerializeField]
     private Text _ammoText;
@@ -19,6 +21,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Text _missileCountText;
+    [SerializeField]
+    private Text _pauseText;
+    [SerializeField]
+    private Image _pauseBox;
 
     [SerializeField]
     private Text _gameOverText;
@@ -47,6 +53,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Image _superLaserImage;
 
+    [SerializeField]
+    private Text _motherShipText;
+    [SerializeField]
+    private Slider _bossHealth;
+    [SerializeField]
+    private Slider _bossShield;
+
     private GameManager _gameManager;
     private bool _isAsteroidDestroyed;
 
@@ -55,13 +68,18 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + 0;
         _ammoText.text = "Ammo: 30/30";
 
-        //_destroyAsteroidText.gameObject.SetActive(true);
+        _destroyAsteroidText.gameObject.SetActive(true);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score: " + playerScore;
+    }
+
+    public void UpdateWave(int currentWave)
+    {
+        _waveSubText.text = "Wave: " + currentWave; 
     }
 
     public void UpdateAmmo(int ammoCount)
@@ -230,5 +248,42 @@ public class UIManager : MonoBehaviour
         }
     }
 
- }
+    public void BossHealthBarOn()
+    {
+        _motherShipText.gameObject.SetActive(true);
+        _bossHealth.gameObject.SetActive(true);
+        _bossShield.gameObject.SetActive(true);
+    }
+
+    public void BossHealthBarOff()
+    {
+        _motherShipText.gameObject.SetActive(false);
+        _bossHealth.gameObject.SetActive(false);
+        _bossShield.gameObject.SetActive(false);
+    }
+
+    public void BossShield(int shieldStength)
+    {
+        _bossShield.value = shieldStength;
+    }
+
+    public void BossHealth(int health)
+    {
+        _bossHealth.value = health;
+    }
+
+    public void PauseMenuOn()
+    {
+        _pauseBox.gameObject.SetActive(true);
+        _pauseText.gameObject.SetActive(true);
+        _returnMainMenuText.gameObject.SetActive(true);
+    }
+
+    public void PauseMenuOff()
+    {
+        _pauseBox.gameObject.SetActive(false);
+        _pauseText.gameObject.SetActive(false);
+        _returnMainMenuText.gameObject.SetActive(false);
+    }
+}
    

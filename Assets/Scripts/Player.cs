@@ -78,6 +78,8 @@ public class Player : MonoBehaviour
     private MainCamera _cameraShake;
     private Powerup _powerUp;
 
+    private Animator _playerTurn;
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -86,8 +88,8 @@ public class Player : MonoBehaviour
         _uiManaager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<MainCamera>();
         _audioSource = GetComponent<AudioSource>();
+        _playerTurn = GetComponent<Animator>();
         //_powerUp = GameObject.FindGameObjectWithTag("PowerUp").GetComponent<Powerup>();
-
 
         if (_spawnManager == null)
         {
@@ -104,6 +106,11 @@ public class Player : MonoBehaviour
             Debug.LogError("The Main Camera Shake is NULL");
         }
 
+        if (_playerTurn == null)
+        {
+            Debug.LogError("The Animator is NULL");
+        }
+
         if (_audioSource == null)
         {
             Debug.LogError("The Audio Source is NULL");
@@ -116,8 +123,28 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            _playerTurn.SetBool("TurnLeft", true);
+        }
+
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
+        {
+            _playerTurn.SetBool("TurnLeft", false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            _playerTurn.SetBool("TurnRight", true);
+        }
+
+        else if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            _playerTurn.SetBool("TurnRight", false);
+        }
+
         CalculateMovement();
-        PowerUpDetect();
+        //PowerUpDetect();
 
 
         if (_isRarePowerUpActive != true)
@@ -147,6 +174,7 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
 
         if (_isSpeedBoostActive == true)
         {
@@ -242,8 +270,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    void PowerUpDetect()
+    /*void PowerUpDetect()
     {
+        
         RaycastHit2D powerupDetect = Physics2D.CircleCast(transform.position, 5.5f, Vector3.down,
          LayerMask.GetMask("PowerUps"));
 
@@ -258,7 +287,7 @@ public class Player : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
 
     void FireLaser()
@@ -289,7 +318,7 @@ public class Player : MonoBehaviour
 
     public void AmmoCollected()
     {
-        _ammoCount = _ammoCount + 10;
+        _ammoCount = _ammoCount + 30;
         AmmoCap();
         _uiManaager.UpdateAmmo(_ammoCount);
     }
@@ -352,14 +381,22 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "EnemyLaser")
+        if (this.gameObject != null)
         {
-            Damage();
-            Destroy(other.gameObject);
-        }
-        if (other.tag == "EnemyLaserPair")
-        {
-            Destroy(other.gameObject);
+            if (other.tag == "EnemyLaser")
+            {
+                Damage();
+                Destroy(other.gameObject);
+            }
+            if (other.tag == "EnemyLaserPair")
+            {
+                Destroy(other.gameObject);
+            }
+
+            if (other.tag == "BossBeam")
+            {
+                Damage();
+            }
         }
     }
 

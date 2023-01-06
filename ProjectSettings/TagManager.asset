@@ -12,6 +12,7 @@ TagManager:
   - Missile
   - Bomb
   - SuperLaser
+  - BossBeam
   layers:
   - Default
   - TransparentFX

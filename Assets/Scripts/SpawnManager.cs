@@ -17,15 +17,13 @@ public class SpawnManager : MonoBehaviour
     private GameObject[] _powerups;
     [SerializeField]
     private bool _stopSpawning = false;
+    private bool _stopPowerUpSpawn;
 
     [SerializeField]
     private Vector3[] _enemySpawnLocation;
 
     [SerializeField]
     private GameObject _bossPrefab;
-
-    private bool _powerupSpawn;
-
     [SerializeField]
     private int _wave;
     [SerializeField]
@@ -59,6 +57,7 @@ public class SpawnManager : MonoBehaviour
             _enemiesDead = 0;
             _wave = currentWave;
             _uiManager.WaveNumber(currentWave);
+            _uiManager.UpdateWave(currentWave);
 
             switch (currentWave)
             {
@@ -88,13 +87,13 @@ public class SpawnManager : MonoBehaviour
                     StartCoroutine(SpawnEnemyRoutineMedium());
                     break;
                 case 6:
-                    _enemiesLeft = 17;
-                    _maxEnemies = 17;
+                    _enemiesLeft = 12;
+                    _maxEnemies = 12;
                     StartCoroutine(SpawnEnemyRoutineMedium());
                     break;
                 case 7:
-                    _enemiesLeft = 18;
-                    _maxEnemies = 18;
+                    _enemiesLeft = 13;
+                    _maxEnemies = 13;
                     StartCoroutine(SpawnEnemyRoutineMedium());
                     break;
                 case 8:
@@ -115,8 +114,20 @@ public class SpawnManager : MonoBehaviour
             }
         }
 
-        StartCoroutine(SpawnPowerupRoutine());
-        StartCoroutine(SpawnRarePowerupRoutine());
+        if (currentWave == 10)
+        {
+            _stopPowerUpSpawn = true;
+            StartCoroutine(SpawnBossPowerupsRoutine());
+        }
+    }
+
+    public void SpawnPowerUps()
+    {
+        if (_stopPowerUpSpawn == false)
+        {
+            StartCoroutine(SpawnPowerupRoutine());
+            StartCoroutine(SpawnRarePowerupRoutine());
+        }
     }
 
     IEnumerator SpawnEnemyRoutineEasy()
@@ -205,11 +216,12 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
 
-        while (_stopSpawning == false)
+        while (_stopPowerUpSpawn == false)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-9f, 9f), 7.5f, 0);
             int randomPowerUp = Random.Range(0, 5);
             Instantiate(_powerups[randomPowerUp], posToSpawn, Quaternion.identity);
+            yield return null;
             yield return new WaitForSeconds(Random.Range(3, 8));
         }
     }
@@ -218,13 +230,28 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(30f);
 
-        while (_stopSpawning == false)
+        while (_stopPowerUpSpawn == false)
         {
             Vector3 posTospawn = new Vector3(Random.Range(-9f, 9f), 7.5f, 0);
             int randomPowerUp = Random.Range(5, 9);
             Instantiate(_powerups[randomPowerUp], posTospawn, Quaternion.identity);
+            yield return null;
             yield return new WaitForSeconds(30f);
         }
+    }
+
+    IEnumerator SpawnBossPowerupsRoutine()
+    {
+        yield return new WaitForSeconds(10f);
+
+        while (_stopSpawning == false)
+        {
+            Vector3 posToSpawn = new Vector3(Random.Range(-9f, 9f), 7.5f, 0);
+            int randomPowerUp = Random.Range(3, 6);
+            Instantiate(_powerups[randomPowerUp], posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(10f);
+        }
+
     }
 
     public void OnPlayerDeath()

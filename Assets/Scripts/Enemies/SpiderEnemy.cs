@@ -13,7 +13,7 @@ public class SpiderEnemy : MonoBehaviour
     private AudioSource _enemyLaserAudioSource;
     private SpawnManager _spawnManager;
 
-    private float _speed = 7f;
+    private float _speed = 5.5f;
     private int _enemyMovement;
 
     [SerializeField]
@@ -30,7 +30,7 @@ public class SpiderEnemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
         {
-            Debug.LogError("The Player is NULL");
+            Debug.Log("The Player is NULL");
         }
 
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();

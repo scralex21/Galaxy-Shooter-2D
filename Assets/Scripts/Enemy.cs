@@ -17,6 +17,8 @@ public class Enemy : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField]
     private AudioClip _enemyLaserAudio;
+    [SerializeField]
+    private AudioClip _explosionAudio;
     private AudioSource _enemyLaserAudioSource;
     private SpawnManager _spawnManager;
     [SerializeField]
@@ -28,7 +30,7 @@ public class Enemy : MonoBehaviour
     private bool _isShieldActive;
     private int _shieldID;
 
-    private bool _destroyPowerUp;
+    private bool _enemyDestroyed;
 
     void Start()
     {
@@ -52,13 +54,13 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
         {
-            Debug.LogError("The Player is NULL");
+            Debug.Log("The Player is NULL");
         }
 
         _enemyExplosion = GetComponent<Animator>();
         if (_enemyExplosion == null)
         {
-            Debug.LogError("The Animator is NULL");
+            Debug.Log("The Animator is NULL");
         }
     }
 
@@ -66,7 +68,6 @@ public class Enemy : MonoBehaviour
     {
         EnemyMovement();
         EnemyFire();
-        FireAtPowerup();
     }
 
     void EnemyMovement()
@@ -119,7 +120,7 @@ public class Enemy : MonoBehaviour
 
     void EnemyFire()
     {
-        if (Time.time > _canFire)
+        if (Time.time > _canFire && _enemyDestroyed == false)
         {
             _fireRate = Random.Range(3f, 7f);
             _canFire = Time.time + _fireRate;
@@ -135,27 +136,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void FireAtPowerup()
+    public void FireAtPowerup()
     {
-        Vector3 enemyOffset = (transform.position + new Vector3(0, -0.75f, 0));
+        GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
-        RaycastHit2D hit = Physics2D.Raycast(enemyOffset, Vector3.down, 10f, LayerMask.GetMask("PowerUps"));
-        Debug.DrawRay(enemyOffset, Vector3.down * 10f, Color.red);
-
-        if (hit.collider != null)
+        for (int i = 0; i < lasers.Length; i++)
         {
-            if (hit.collider.CompareTag("PowerUp"))
-            {
-                Debug.Log("The PowerUp was detected");
-                GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
-                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-                for (int i = 0; i < lasers.Length; i++)
-                {
-                    lasers[i].AssignEnemyLaser();
-                }
-            }
+            lasers[i].AssignEnemyLaser();
         }
+
+        _enemyLaserAudioSource.Play();
+
     }
 
     void EnemyShield()
@@ -187,6 +179,7 @@ public class Enemy : MonoBehaviour
 
             }
 
+            _enemyDestroyed = true;
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
@@ -212,6 +205,7 @@ public class Enemy : MonoBehaviour
                 _player.AddScore();
             }
 
+            _enemyDestroyed = true;
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
@@ -237,6 +231,7 @@ public class Enemy : MonoBehaviour
                 _player.AddScore();
             }
 
+            _enemyDestroyed = true;
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
@@ -252,6 +247,7 @@ public class Enemy : MonoBehaviour
                 _player.AddScore();
             }
 
+            _enemyDestroyed = true;
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _shield.SetActive(false);
             _speed = 0;
@@ -267,6 +263,7 @@ public class Enemy : MonoBehaviour
                 _player.AddScore();
             }
 
+            _enemyDestroyed = true;
             _enemyExplosion.SetTrigger("OnEnemyDeath");
             _shield.SetActive(false);
             _speed = 0;

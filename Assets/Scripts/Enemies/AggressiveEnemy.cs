@@ -10,7 +10,7 @@ public class AggressiveEnemy : MonoBehaviour
     private AudioSource _audioSource;
     private SpawnManager _spawnManager;
 
-    private float _speed = 4f;
+    private float _speed = 3f;
     [SerializeField]
     private float _range = 6f;
 
@@ -30,11 +30,15 @@ public class AggressiveEnemy : MonoBehaviour
         }
     }
 
-    
+
     void Update()
     {
         Movement();
-        AggressiveAttack();    
+
+        if (_player != null)
+        {
+            AggressiveAttack();
+        }
     }
 
     void Movement()
@@ -64,7 +68,7 @@ public class AggressiveEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && _player != null)
         {
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
